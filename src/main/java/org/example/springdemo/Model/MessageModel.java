@@ -14,4 +14,5 @@ public class MessageModel {
     private UUID messageID;
     private UserModel user;
     private String message;
+    private Boolean deleted;
 }

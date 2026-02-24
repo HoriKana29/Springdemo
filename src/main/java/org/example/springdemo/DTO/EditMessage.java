@@ -9,7 +9,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CreateMessage {
+public class EditMessage {
     private UUID userID;
-    private String message;
+    private UUID messageID;
+    private String newMessage;
 }

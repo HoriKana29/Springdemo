@@ -10,5 +10,7 @@ public interface MessageRepository {
     boolean sendMessage(UUID userID, String message);
     boolean deleteMessage(UUID userID, UUID messageID);
     MessageModel getMessageByID(UUID id);
+    List<MessageModel> searchMessages(String filter);
+    boolean editMessage(UUID userID, UUID messageID, String newMessage);
 
 }

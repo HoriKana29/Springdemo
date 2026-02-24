@@ -18,6 +18,14 @@ public class UserController {
 
     @PostMapping("/add")
     public UUID addUser(@RequestBody CreateUser createUser) {
-        return userRepository.addUser(createUser.getUserName());
+
+        System.out.println("=== ADD USER CALLED ===");
+        System.out.println("Username: " + createUser.getUsername());
+
+        UUID id = userRepository.addUser(createUser.getUsername());
+
+        System.out.println("Generated UUID: " + id);
+
+        return id;
     }
 }
