@@ -9,6 +9,7 @@ import java.util.*;
 public class MyUserRepository implements UserRepository {
 
     private final Map<UUID, UserModel> users = new HashMap<>();
+    private int userCount = 0;
 
     @Override
     public UUID addUser(String user) {
@@ -28,5 +29,20 @@ public class MyUserRepository implements UserRepository {
         System.out.println("Searching for userID: " + id);
         System.out.println("Users currently in map: " + users.keySet());
         return users.get(id);
+    }
+
+    @Override
+    public int getUserCount() {
+        return userCount;
+    }
+
+    @Override
+    public void incrementUserCount() {
+        userCount++;
+    }
+
+    @Override
+    public void decrementUserCount() {
+        userCount--;
     }
 }

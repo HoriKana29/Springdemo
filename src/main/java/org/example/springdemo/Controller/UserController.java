@@ -3,10 +3,7 @@ package org.example.springdemo.Controller;
 import lombok.RequiredArgsConstructor;
 import org.example.springdemo.DTO.CreateUser;
 import org.example.springdemo.Repository.UserRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -27,5 +24,10 @@ public class UserController {
         System.out.println("Generated UUID: " + id);
 
         return id;
+    }
+
+    @GetMapping("/user-number")
+    public int getUserNumber() {
+        return userRepository.getUserCount();
     }
 }

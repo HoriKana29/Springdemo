@@ -7,5 +7,7 @@ import java.util.UUID;
 public interface UserRepository {
     UUID addUser(String user);
     UserModel getUserByID(UUID id);
-
+    int getUserCount();
+    void incrementUserCount();
+    void decrementUserCount();
 }
