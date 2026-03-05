@@ -1,7 +1,7 @@
 package org.example.springdemo.Controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.springdemo.DTO.CreateMessage;
+import org.example.springdemo.DTO.*;
 import org.example.springdemo.Repository.MessageRepository;
 import org.example.springdemo.Repository.UserRepository;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -32,5 +32,66 @@ public class WebsocketController {
             messagingTemplate.convertAndSendToUser
                     (principal.getName(), "/queue/errors","Fail to send Message");
         }
+    }
+
+    // /app/chat/delete-message
+    @MessageMapping("/chat/delete-message")
+    public void deleteMessage(@Payload DeleteMessage deleteMessage, Principal principal){
+
+        boolean isOperationSuccess =
+                myMessageRepository.deleteMessage(deleteMessage.getUserID(),deleteMessage.getMessageID());
+
+        if(isOperationSuccess){
+            // broadcast updated message list
+            messagingTemplate.convertAndSend("/topic/messages", myMessageRepository.getMessages()
+            );
+        }
+        else{
+            // send error to the user who requested delete
+            messagingTemplate.convertAndSendToUser(
+                    principal.getName(),
+                    "/queue/errors",
+                    "Fail to delete message"
+            );
+        }
+    }
+
+    // /app/chat/edit-message
+    @MessageMapping("/chat/edit-message")
+    public void editMessage(@Payload EditMessage editMessage, Principal principal){
+
+        boolean isOperationSuccess =
+                myMessageRepository.editMessage(
+                        editMessage.getUserID(),
+                        editMessage.getMessageID(),
+                        editMessage.getNewMessage()
+                );
+
+        if(isOperationSuccess){
+            // broadcast updated messages
+            messagingTemplate.convertAndSend("/topic/messages", myMessageRepository.getMessages()
+            );
+        }
+        else{
+            messagingTemplate.convertAndSendToUser(
+                    principal.getName(),
+                    "/queue/errors",
+                    "Fail to edit message"
+            );
+        }
+    }
+
+    @MessageMapping("/chat/typing")
+    public void typing(@Payload TypingMessage message){
+
+        myUserRepository.setTyping(
+                message.getUserID(),
+                message.isTyping()
+        );
+
+        messagingTemplate.convertAndSend(
+                "/topic/typing",
+                myUserRepository.getTypingUsers()
+        );
     }
 }

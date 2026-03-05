@@ -9,11 +9,12 @@ import java.util.*;
 public class MyUserRepository implements UserRepository {
 
     private final Map<UUID, UserModel> users = new HashMap<>();
+    private final Set<UUID> typingUsers = new HashSet<>();
     private int userCount = 0;
 
     @Override
     public UUID addUser(String user) {
-        UserModel userModel = new UserModel(UUID.randomUUID(), user);
+        UserModel userModel = new UserModel(UUID.randomUUID(), user,true);
 
         System.out.println("Saving user to Map: " + userModel.getUserID());
 
@@ -44,5 +45,40 @@ public class MyUserRepository implements UserRepository {
     @Override
     public void decrementUserCount() {
         userCount--;
+    }
+
+    @Override
+    public List<UserModel> getAllUsers() {
+        return new ArrayList<>(users.values());
+    }
+
+    @Override
+    public void removeUser(UUID id) {
+        users.remove(id);
+        typingUsers.remove(id);
+    }
+
+    @Override
+    public void setTyping(UUID userID, boolean typing) {
+        if (typing) typingUsers.add(userID);
+        else typingUsers.remove(userID);
+        System.out.println("Typing users now: " + typingUsers);
+
+    }
+
+    @Override
+    public List<UserModel> getTypingUsers() {
+        List<UserModel> result = new ArrayList<>();
+
+        for (UUID id : typingUsers) {
+            UserModel user = users.get(id);
+            if (user != null) {
+                result.add(user);
+            }
+        }
+
+        System.out.println("Typing users: " + typingUsers);
+
+        return result;
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.UUID;
+
 @Component
 @AllArgsConstructor
 public class WebsocketEventListener {
@@ -19,11 +21,17 @@ public class WebsocketEventListener {
     public void onConnect(SessionConnectedEvent event) {
         userRepository.incrementUserCount();
         messagingTemplate.convertAndSend("/topic/user-number",userRepository.getUserCount());
+        // send user list
+        messagingTemplate.convertAndSend("/topic/user-list", userRepository.getAllUsers());
     }
 
     @EventListener
     public void onDisconnect(SessionDisconnectEvent event) {
+        if(event.getUser() == null) return;
+        String uuid = event.getUser().getName();
+        userRepository.removeUser(UUID.fromString(uuid));
         userRepository.decrementUserCount();
         messagingTemplate.convertAndSend("/topic/user-number",userRepository.getUserCount());
+        messagingTemplate.convertAndSend("/topic/user-list", userRepository.getAllUsers());
     }
 }

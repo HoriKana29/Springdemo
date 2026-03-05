@@ -12,4 +12,5 @@ import java.util.UUID;
 public class UserModel {
     private UUID userID;
     private String username;
+    private boolean online;
 }

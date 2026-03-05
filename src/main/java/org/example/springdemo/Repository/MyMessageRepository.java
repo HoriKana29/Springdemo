@@ -5,9 +5,7 @@ import org.example.springdemo.Model.MessageModel;
 import org.example.springdemo.Model.UserModel;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
